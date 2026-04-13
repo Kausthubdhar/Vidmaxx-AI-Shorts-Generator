@@ -2,8 +2,10 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Play, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { auth } from "@clerk/nextjs/server";
 
-export function HeroSection() {
+export async function HeroSection() {
+  const { userId } = await auth();
   return (
     <section className="relative overflow-hidden bg-background pt-24 md:pt-32 pb-16 md:pb-24">
       {/* Background radial gradient */}
@@ -31,10 +33,21 @@ export function HeroSection() {
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
-          <Button size="lg" className="rounded-full px-8 h-12 w-full sm:w-auto shadow-lg shadow-primary/20">
-            Start Generating for Free
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+          {userId ? (
+            <Button asChild size="lg" className="rounded-full px-8 h-12 w-full sm:w-auto shadow-lg shadow-primary/20">
+              <Link href="/dashboard">
+                Go to Dashboard
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          ) : (
+            <Button asChild size="lg" className="rounded-full px-8 h-12 w-full sm:w-auto shadow-lg shadow-primary/20">
+              <Link href="/sign-in">
+                Start Generating for Free
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          )}
           <Button size="lg" variant="outline" className="rounded-full px-8 h-12 w-full sm:w-auto border-border hover:bg-muted/50">
             <Play className="mr-2 h-4 w-4" />
             Watch Demo
